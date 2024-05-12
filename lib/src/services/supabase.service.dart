@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseService {
@@ -5,11 +7,26 @@ class SupabaseService {
 
   Future<Session?> signInWithEmailAndPassword(
       String email, String password) async {
-    final response =
-        await _client.auth.signInWithPassword(email: email, password: password);
-    if (response.user != null && response.session != null) {
+    try {
+      final response = await _client.auth
+          .signInWithPassword(email: email, password: password);
+
+      if (response.session == null) {
+        
+        Fluttertoast.showToast(
+          msg: 'Correo o contraseña incorrectos',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        return null;
+      }
+
       return response.session;
-    } else {
+    } catch (e) {
       return null;
     }
   }
