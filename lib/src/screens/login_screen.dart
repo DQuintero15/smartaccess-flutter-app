@@ -5,7 +5,6 @@ import 'package:smartaccess_app/src/utils/app_constants.dart';
 import 'package:smartaccess_app/src/widgets/button_widget.dart';
 import 'package:smartaccess_app/src/widgets/password_widget.dart';
 import 'package:smartaccess_app/src/widgets/text_field_widget.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
