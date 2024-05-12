@@ -1,9 +1,7 @@
-import 'package:smartaccess_app/src/utils/app_constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseService {
-  final _client =
-      SupabaseClient(AppConstants.supabaseUrl, AppConstants.supabaseKey);
+  final _client = Supabase.instance.client;
 
   Future<Session?> signInWithEmailAndPassword(
       String email, String password) async {
