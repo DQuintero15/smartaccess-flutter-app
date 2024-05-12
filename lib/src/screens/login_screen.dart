@@ -6,12 +6,17 @@ import 'package:smartaccess_app/src/widgets/button_widget.dart';
 import 'package:smartaccess_app/src/widgets/password_widget.dart';
 import 'package:smartaccess_app/src/widgets/text_field_widget.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,11 +42,13 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 50),
                 TextFieldWidget(
-                    controller: emailController,
+                    controller: widget.emailController,
                     hintText: 'Ingresa tu correo electrónico',
                     type: TextInputType.emailAddress),
                 const SizedBox(height: 20),
-                PasswordWidget(controller: passwordController, hintText: '**********'),
+                PasswordWidget(
+                    controller: widget.passwordController,
+                    hintText: '**********'),
                 const SizedBox(height: 10),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -61,17 +68,22 @@ class LoginScreen extends StatelessWidget {
                 const SizedBox(height: 30),
                 ButtonWidget(
                   onPressed: () async {
-                    final email = emailController.text;
-                    final password = passwordController.text;
+                    final email = widget.emailController.text;
+                    final password = widget.passwordController.text;
 
-                    final authResponse = await SupabaseService().signInWithEmailAndPassword(email, password);
+                    final response = await SupabaseService()
+                        .signInWithEmailAndPassword(email, password);
 
-                    if (authResponse != null) {
-                      print(authResponse);
+                    if (response != null) {
                     } else {
-                      print(authResponse);
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Correo o contraseña incorrectos'),
+                        ),
+                      );
+                      
                     }
-                    
 
                   },
                   text: 'Iniciar sesión',
