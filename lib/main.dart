@@ -1,3 +1,5 @@
+
+import 'package:cloudinary_flutter/cloudinary_object.dart';
 import 'package:flutter/material.dart';
 import 'package:smartaccess_app/src/screens/home_screen.dart';
 import 'package:smartaccess_app/src/screens/navigation_screen.dart';
@@ -16,6 +18,8 @@ void main() async {
 
   await Supabase.initialize(
       url: AppConstants.supabaseUrl, anonKey: AppConstants.supabaseKey);
+
+  CloudinaryObject.fromCloudName(cloudName: AppConstants.cloudName);
 
   final cameras = await availableCameras();
 

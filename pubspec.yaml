@@ -12,6 +12,8 @@ dependencies:
   supabase_flutter: ^2.0.0
   fluttertoast: ^8.2.5
   camera: ^0.10.6
+  cloudinary_flutter: ^1.0.0
+  cloudinary_url_gen: ^1.0.0
   flutter:
     sdk: flutter
 
