@@ -1,7 +1,23 @@
+import 'dart:async';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseService {
   final _client = Supabase.instance.client;
+
+  Session? getCurrentSession()  {
+    try {
+      final response =  _client.auth.currentSession;
+
+      if (response == null) {
+        return null;
+      }
+
+      return response;
+    } catch (e) {
+      return null;
+    }
+  }
 
   User? getCurrentUser() {
     try {

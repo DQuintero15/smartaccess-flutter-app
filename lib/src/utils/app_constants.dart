@@ -7,4 +7,6 @@ class AppConstants {
   static const String apiBaseUrl =  String.fromEnvironment('API_BASE_URL');
   static const  supabaseUrl = String.fromEnvironment('SUPABASE_URL');
   static const  supabaseKey = String.fromEnvironment('SUPABASE_KEY');
+  static const cloudName = String.fromEnvironment('CLOUD_NAME');
+  static const uploadPreset = String.fromEnvironment('UPLOAD_PRESET');
 }
