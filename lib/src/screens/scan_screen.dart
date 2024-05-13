@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:smartaccess_app/src/services/supabase.service.dart';
 import 'package:smartaccess_app/src/utils/app_color.dart';
+import 'package:smartaccess_app/src/utils/app_constants.dart';
+import 'package:http/http.dart' as http;
 
 class ScanScreen extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -17,6 +23,8 @@ class _ScanScreenState extends State<ScanScreen> {
   bool isCameraReady = false;
   int direction = 0;
   bool isFlashOn = false;
+  bool isUploadingToCloudinary = false;
+  bool isProcessing = false;
 
   @override
   void initState() {
@@ -26,8 +34,7 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   void initializeCamera() {
-    controller = CameraController(
-        cameras[direction], ResolutionPreset.medium,
+    controller = CameraController(cameras[direction], ResolutionPreset.high,
         enableAudio: false);
     controller.initialize().then((_) {
       if (!mounted) {
@@ -58,6 +65,25 @@ class _ScanScreenState extends State<ScanScreen> {
         body: Stack(
       children: [
         Positioned.fill(child: CameraPreview(controller)),
+        if (isUploadingToCloudinary)
+          Positioned.fill(
+            child: Container(
+              color: Colors.black54,
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ),
+
+        if (isProcessing)
+          Positioned.fill(
+            child: Container(
+              color: Colors.black54,
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ),
 
         // Take Picture Button
         Positioned(
@@ -65,8 +91,129 @@ class _ScanScreenState extends State<ScanScreen> {
           left: 20,
           child: FloatingActionButton(
             backgroundColor: AppColor.white,
-            onPressed: () {
+            onPressed: () async {
               // Take Picture
+
+              try {
+                final image = await controller.takePicture();
+
+                print("Image Path: ${image.path}");
+
+                // Upload Image to Cloudinary
+
+                setState(() {
+                  isUploadingToCloudinary = true;
+                });
+
+                final url = Uri.parse(
+                    'https://api.cloudinary.com/v1_1/${AppConstants.cloudName}/image/upload');
+
+                final request = http.MultipartRequest('POST', url)
+                  ..fields['upload_preset'] = AppConstants.uploadPreset
+                  ..files.add(
+                      await http.MultipartFile.fromPath('file', image.path));
+
+                final response = await request.send();
+
+                setState(() {
+                  isUploadingToCloudinary = false;
+                });
+
+                if (response.statusCode == 200) {
+                  final responseString = await response.stream.bytesToString();
+                  Fluttertoast.showToast(
+                      msg: "Imagen Subida Exitosamente",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.green,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+
+                  final secureUrl =
+                      responseString.split('secure_url":"')[1].split('"')[0];
+
+                  final proccessingRequest = Uri.parse(
+                    '${AppConstants.apiBaseUrl}hook',
+                  );
+
+                  setState(() {
+                    isProcessing = true;
+                  });
+
+                  final accessToken =
+                      SupabaseService().getCurrentSession()?.accessToken;
+
+                  final processingResponse = await http.post(proccessingRequest,
+                      headers: {
+                        "Authorization": "Bearer $accessToken",
+                        "Content-Type": "application/json"
+                      },
+                      body: jsonEncode({
+                        'image_url': secureUrl,
+                      }));
+
+                  setState(() {
+                    isProcessing = false;
+                  });
+
+                  if (processingResponse.statusCode == 200) {
+                    Fluttertoast.showToast(
+                        msg: "Imagen Procesada Exitosamente",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.green,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  } else {
+                    Fluttertoast.showToast(
+                        msg: "Error al Procesar Imagen",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  }
+
+                  final proccessingResponseString = processingResponse.body;
+                  final resultDecoded = jsonDecode(proccessingResponseString);
+                  
+                  final result = resultDecoded['result'];
+
+
+                  if (result != null) {
+                    Fluttertoast.showToast(
+                        msg: "Placa $result Detectada. Total a Pagar: \$5300 COP",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 5,
+                        backgroundColor: Colors.green,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  }
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "Error al procesar Imagen",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                }
+              } catch (e) {
+                print("Error: $e");
+                Fluttertoast.showToast(
+                    msg: "Error al Tomar Foto",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+              }
             },
             child: const Icon(Icons.camera, color: AppColor.caribbeanCurrent),
           ),
