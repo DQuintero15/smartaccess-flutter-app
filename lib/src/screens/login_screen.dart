@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:smartaccess_app/src/services/supabase.service.dart';
 import 'package:smartaccess_app/src/utils/app_color.dart';
 import 'package:smartaccess_app/src/utils/app_constants.dart';
@@ -75,16 +76,20 @@ class _LoginScreenState extends State<LoginScreen> {
                         .signInWithEmailAndPassword(email, password);
 
                     if (response != null) {
+                      if (context.mounted) {
+                        Navigator.pushReplacementNamed(context, '/navigation');
+                      }
                     } else {
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Correo o contraseña incorrectos'),
-                        ),
+                      Fluttertoast.showToast(
+                        msg: 'Correo o contraseña incorrectos',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: AppColor.white,
+                        textColor: AppColor.caribbeanCurrent,
+                        fontSize: 16.0,
                       );
-                      
                     }
-
                   },
                   text: 'Iniciar sesión',
                 ),
