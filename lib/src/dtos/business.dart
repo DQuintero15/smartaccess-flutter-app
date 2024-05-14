@@ -2,7 +2,7 @@ class BusinessDto {
   final String name;
   final String email;
   final String owner;
-  final String coastPerMinute;
+  final int coastPerMinute;
 
   BusinessDto({
     required this.name,
