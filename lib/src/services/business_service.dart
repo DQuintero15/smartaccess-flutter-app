@@ -6,7 +6,24 @@ import 'package:http/http.dart' as http;
 import 'package:smartaccess_app/src/utils/app_constants.dart';
 
 class BusinessService {
-  final apiUrl = "${AppConstants.apiBaseUrl}businesses";
+  final apiUrl = "${AppConstants.apiBaseUrl}/businesses";
+
+  Future<Business?> getBusiness(String token) async {
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Authorization": "Bearer $token",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final business = Business.fromJson(jsonDecode(response.body));
+      return business;
+    } else {
+      return null;
+    }
+  }
 
   Future<Business?> registerBusiness(
       BusinessDto businessDto, String token) async {
