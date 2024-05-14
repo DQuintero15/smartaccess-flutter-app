@@ -13,21 +13,20 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    super.initState();
+    Provider.of<BusinessProvider>(context, listen: false).getBusinessData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<BusinessProvider>().getBusinessData();
-    });
+    final result = Provider.of<BusinessProvider>(context);
 
     return Scaffold(
       backgroundColor: AppColor.night,
-      body: Consumer<BusinessProvider>(
-        builder: (context, value, child) {
-          if (value.businessData == null) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            final businessData = value.businessData;
-            return Padding(
+      body: result.businessData == null
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
               padding: const EdgeInsets.all(20.0),
               child: SafeArea(
                 child: Column(
@@ -42,7 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderRadius: BorderRadius.circular(20),
                               child: const Image(
                                 image: AssetImage(
-                                    "assets/images/parking_icon.jpg"),
+                                  "assets/images/parking_icon.jpg",
+                                ),
                                 width: 35,
                                 height: 35,
                               ),
@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${businessData?.name}',
+                                  result.businessData!.name,
                                   style: const TextStyle(
                                     color: AppColor.white,
                                     fontFamily: AppConstants.fontFamily,
@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 const SizedBox(height: 1),
                                 Text(
-                                  '${businessData?.owner}',
+                                  result.businessData!.owner,
                                   style: const TextStyle(
                                     color: AppColor.gray,
                                     fontFamily: AppConstants.fontFamily,
@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 const SizedBox(height: 1),
                                 Text(
-                                  'Tarifa: \$${context.read<BusinessProvider>().businessData?.coastPerMinute.toString()} COP/min',
+                                  'Tarifa: \$${result.businessData!.coastPerMinute.toString()} COP/min',
                                   style: const TextStyle(
                                     color: AppColor.gray,
                                     fontFamily: AppConstants.fontFamily,
@@ -84,10 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-            );
-          }
-        },
-      ),
+            ),
     );
   }
 }
