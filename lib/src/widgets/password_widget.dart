@@ -9,7 +9,11 @@ class PasswordWidget extends StatefulWidget {
   final String? errorText;
 
   const PasswordWidget(
-      {super.key, required this.controller, required this.hintText, this.validator, this.errorText});
+      {super.key,
+      required this.controller,
+      required this.hintText,
+      this.validator,
+      this.errorText});
 
   @override
   State<PasswordWidget> createState() => _PasswordWidgetState();
