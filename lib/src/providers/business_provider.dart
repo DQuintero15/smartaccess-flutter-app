@@ -4,8 +4,8 @@ import 'package:smartaccess_app/src/services/business_service.dart';
 import 'package:smartaccess_app/src/services/firebase_auth_service.dart';
 
 class BusinessProvider extends ChangeNotifier {
-  final BusinessService _businessService = BusinessService();
-  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
+  final _businessService = BusinessService();
+  final _firebaseAuthService = FirebaseAuthService();
 
   Business? _businessData;
 
