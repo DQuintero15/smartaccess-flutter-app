@@ -181,6 +181,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             textColor: Colors.white,
                             fontSize: 16.0,
                           );
+
+                          if (context.mounted) {
+                            Navigator.pushReplacementNamed(context, '/navigation');
+                          }
                         } else {
                           Fluttertoast.showToast(
                             msg: 'Ocurrió un error al registrar tu negocio',
