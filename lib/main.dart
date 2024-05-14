@@ -1,5 +1,7 @@
 import 'package:cloudinary_flutter/cloudinary_object.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smartaccess_app/src/providers/business_provider.dart';
 import 'package:smartaccess_app/src/screens/home_screen.dart';
 import 'package:smartaccess_app/src/screens/navigation_screen.dart';
 import 'package:smartaccess_app/src/screens/login_screen.dart';
@@ -25,9 +27,13 @@ void main() async {
 
   final cameras = await availableCameras();
 
-  runApp(MainApp(
-    cameras: cameras,
-  ));
+  runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => BusinessProvider()),
+      ],
+      child: MainApp(
+        cameras: cameras,
+      )));
 }
 
 class MainApp extends StatelessWidget {
@@ -55,7 +61,7 @@ class MainApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/vehicles': (context) => const VehiclesScreen(),
         '/profile': (context) => const ProfileScreen(),
-        '/register': (context) =>  RegisterScreen(),
+        '/register': (context) => RegisterScreen(),
       },
       home: const SplashScreen(),
     );
