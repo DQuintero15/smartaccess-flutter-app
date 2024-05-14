@@ -10,16 +10,12 @@ import 'package:smartaccess_app/src/screens/splash_screen.dart';
 import 'package:smartaccess_app/src/screens/vehicles_screen.dart';
 import 'package:smartaccess_app/src/utils/app_color.dart';
 import 'package:smartaccess_app/src/utils/app_constants.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await Supabase.initialize(
-      url: AppConstants.supabaseUrl, anonKey: AppConstants.supabaseKey);
 
   CloudinaryObject.fromCloudName(cloudName: AppConstants.cloudName);
 
