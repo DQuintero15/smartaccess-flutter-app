@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "329287770834",
+    "project_id": "smartaccessflutterapp",
+    "storage_bucket": "smartaccessflutterapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:329287770834:android:daf7d4513af5baef7f830b",
+        "android_client_info": {
+          "package_name": "com.example.smartaccess_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJGiV4mebyITOiY_SP10Z7PM_kJ3s-Mbg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
