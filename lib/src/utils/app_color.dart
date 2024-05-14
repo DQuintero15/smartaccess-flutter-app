@@ -7,4 +7,5 @@ class AppColor {
   static const gray = Color(0xFF757575);
   static const lightGray = Color(0xFFF0F0F0);
   static const celestianBlue = Color(0xFF20A4F3);
+  static const softGray = Color.fromARGB(255, 224, 224, 224);
 }

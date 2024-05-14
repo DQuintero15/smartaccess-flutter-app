@@ -93,13 +93,8 @@ class _ScanScreenState extends State<ScanScreen> {
             backgroundColor: AppColor.white,
             onPressed: () async {
               // Take Picture
-
               try {
                 final image = await controller.takePicture();
-
-                print("Image Path: ${image.path}");
-
-                // Upload Image to Cloudinary
 
                 setState(() {
                   isUploadingToCloudinary = true;
@@ -141,8 +136,8 @@ class _ScanScreenState extends State<ScanScreen> {
                     isProcessing = true;
                   });
 
-                  final accessToken =
-                      SupabaseService().getCurrentSession()?.accessToken;
+                  final currentSession =await SupabaseService().getCurrentSession();
+                  final accessToken = currentSession?.accessToken;
 
                   final processingResponse = await http.post(proccessingRequest,
                       headers: {
@@ -204,7 +199,6 @@ class _ScanScreenState extends State<ScanScreen> {
                       fontSize: 16.0);
                 }
               } catch (e) {
-                print("Error: $e");
                 Fluttertoast.showToast(
                     msg: "Error al Tomar Foto",
                     toastLength: Toast.LENGTH_SHORT,
@@ -226,7 +220,7 @@ class _ScanScreenState extends State<ScanScreen> {
           child: FloatingActionButton(
             backgroundColor: AppColor.white,
             onPressed: () {
-              if (controller.value.flashMode == FlashMode.off) {
+              if (!isFlashOn) {
                 controller.setFlashMode(FlashMode.torch);
               } else {
                 controller.setFlashMode(FlashMode.off);

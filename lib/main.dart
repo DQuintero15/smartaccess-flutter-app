@@ -1,10 +1,10 @@
-
 import 'package:cloudinary_flutter/cloudinary_object.dart';
 import 'package:flutter/material.dart';
 import 'package:smartaccess_app/src/screens/home_screen.dart';
 import 'package:smartaccess_app/src/screens/navigation_screen.dart';
 import 'package:smartaccess_app/src/screens/login_screen.dart';
 import 'package:smartaccess_app/src/screens/profile_screen.dart';
+import 'package:smartaccess_app/src/screens/register_screen.dart';
 import 'package:smartaccess_app/src/screens/scan_screen.dart';
 import 'package:smartaccess_app/src/screens/splash_screen.dart';
 import 'package:smartaccess_app/src/screens/vehicles_screen.dart';
@@ -12,6 +12,8 @@ import 'package:smartaccess_app/src/utils/app_color.dart';
 import 'package:smartaccess_app/src/utils/app_constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:camera/camera.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +22,10 @@ void main() async {
       url: AppConstants.supabaseUrl, anonKey: AppConstants.supabaseKey);
 
   CloudinaryObject.fromCloudName(cloudName: AppConstants.cloudName);
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   final cameras = await availableCameras();
 
@@ -53,6 +59,7 @@ class MainApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/vehicles': (context) => const VehiclesScreen(),
         '/profile': (context) => const ProfileScreen(),
+        '/register': (context) =>  RegisterScreen(),
       },
       home: const SplashScreen(),
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:smartaccess_app/src/services/supabase.service.dart';
+import 'package:smartaccess_app/src/services/firebase_auth_service.dart';
 import 'package:smartaccess_app/src/utils/app_color.dart';
 import 'package:smartaccess_app/src/utils/app_constants.dart';
 import 'package:smartaccess_app/src/widgets/button_widget.dart';
@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     final email = widget.emailController.text;
                     final password = widget.passwordController.text;
 
-                    final response = await SupabaseService()
+                    final response = await FirebaseAuthService()
                         .signInWithEmailAndPassword(email, password);
 
                     if (response != null) {
@@ -95,7 +95,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 30),
                 ButtonWidget(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/register');
+                  },
                   text: 'Registrarse',
                 ),
               ],
