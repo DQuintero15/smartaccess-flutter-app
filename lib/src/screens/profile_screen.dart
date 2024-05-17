@@ -22,7 +22,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final result = Provider.of<BusinessProvider>(context);
     return  Scaffold(
       backgroundColor: AppColor.night,
-      body:  Padding(
+      body: result.businessData == null
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
               padding: const EdgeInsets.all(20.0),
               child: SafeArea(
                 child: Column(
