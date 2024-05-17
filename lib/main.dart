@@ -1,6 +1,7 @@
 import 'package:cloudinary_flutter/cloudinary_object.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smartaccess_app/src/api/firebase_api.dart';
 import 'package:smartaccess_app/src/providers/business_provider.dart';
 import 'package:smartaccess_app/src/providers/clodinary_provider.dart';
 import 'package:smartaccess_app/src/providers/detection_provider.dart';
@@ -26,6 +27,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  FirebaseApi().init();
 
   final cameras = await availableCameras();
 

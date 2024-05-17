@@ -14,6 +14,7 @@ class BusinessProvider extends ChangeNotifier {
   Future<void> getBusinessData() async {
     final token = await _firebaseAuthService.currentUser?.getIdToken();
     if (token != null) {
+      print('Token: $token');
       _businessData = await _businessService.getBusiness(token);
       notifyListeners();
     }
