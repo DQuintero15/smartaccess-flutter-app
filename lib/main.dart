@@ -19,10 +19,11 @@ import 'package:smartaccess_app/src/utils/app_constants.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await initializeDateFormatting('es_CO', null);
   CloudinaryObject.fromCloudName(cloudName: AppConstants.cloudName);
 
   await Firebase.initializeApp(
