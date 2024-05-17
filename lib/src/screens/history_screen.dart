@@ -22,83 +22,72 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<BusinessProvider>(
-          create: (context) => BusinessProvider(),
-        ),
-        ChangeNotifierProvider<PlatesProvider>(
-          create: (context) => PlatesProvider(),
-        ),
-      ],
-      child: Scaffold(
-        backgroundColor: AppColor.night,
-        body: Consumer2<BusinessProvider, PlatesProvider>(
-          builder: (context, businessProvider, platesProvider, child) {
-            return businessProvider.businessData == null || platesProvider.plateData == null
-                ? const Center(child: CircularProgressIndicator())
-                : Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: SafeArea(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: const Image(
-                                      image: AssetImage(
-                                        "assets/images/parking_icon.jpg",
-                                      ),
-                                      width: 35,
-                                      height: 35,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        businessProvider.businessData!.name,
-                                        style: const TextStyle(
-                                          color: AppColor.white,
-                                          fontFamily: AppConstants.fontFamily,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 1),
-                                      Text(
-                                        businessProvider.businessData!.owner,
-                                        style: const TextStyle(
-                                          color: AppColor.gray,
-                                          fontFamily: AppConstants.fontFamily,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 1),
-                                      Text(
-                                        'Tarifa: \$${businessProvider.businessData!.coastPerMinute.toString()} COP/min',
-                                        style: const TextStyle(
-                                          color: AppColor.gray,
-                                          fontFamily: AppConstants.fontFamily,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+    final result = Provider.of<BusinessProvider>(context);
+    final resultPlate = Provider.of<PlatesProvider>(context);
+    
+    return Scaffold(
+      backgroundColor: AppColor.night,
+      body: result.businessData == null || resultPlate.plateData == null
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: const Image(
+                                image: AssetImage(
+                                  "assets/images/parking_icon.jpg",
+                                ),
+                                width: 35,
+                                height: 35,
                               ),
-                              const Icon(Icons.notifications, color: AppColor.white),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  result.businessData!.name,
+                                  style: const TextStyle(
+                                    color: AppColor.white,
+                                    fontFamily: AppConstants.fontFamily,
+                                  ),
+                                ),
+                                const SizedBox(height: 1),
+                                Text(
+                                  result.businessData!.owner,
+                                  style: const TextStyle(
+                                    color: AppColor.gray,
+                                    fontFamily: AppConstants.fontFamily,
+                                  ),
+                                ),
+                                const SizedBox(height: 1),
+                                Text(
+                                  'Tarifa: \$${result.businessData!.coastPerMinute.toString()} COP/min',
+                                  style: const TextStyle(
+                                    color: AppColor.gray,
+                                    fontFamily: AppConstants.fontFamily,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const Icon(Icons.notifications, color: AppColor.white),
+                      ],
                     ),
-                  );
-          },
-        ),
-      ),
+                  ],
+                ),
+              ),
+            ),
     );
   }
 }

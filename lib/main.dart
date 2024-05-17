@@ -5,6 +5,7 @@ import 'package:smartaccess_app/src/api/firebase_api.dart';
 import 'package:smartaccess_app/src/providers/business_provider.dart';
 import 'package:smartaccess_app/src/providers/clodinary_provider.dart';
 import 'package:smartaccess_app/src/providers/detection_provider.dart';
+import 'package:smartaccess_app/src/providers/plates_provider.dart';
 import 'package:smartaccess_app/src/screens/home_screen.dart';
 import 'package:smartaccess_app/src/screens/navigation_screen.dart';
 import 'package:smartaccess_app/src/screens/login_screen.dart';
@@ -37,6 +38,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => BusinessProvider()),
         ChangeNotifierProvider(create: (context) => CloudinaryProvider()),
         ChangeNotifierProvider(create: (context) => DetectionProvider()),
+        ChangeNotifierProvider(create: (context) => PlatesProvider()),
       ],
       child: MainApp(
         cameras: cameras,
