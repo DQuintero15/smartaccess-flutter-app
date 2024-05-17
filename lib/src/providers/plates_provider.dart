@@ -7,9 +7,9 @@ class PlatesProvider extends ChangeNotifier {
   final _platesService = PlateService();
   final _firebaseAuthService = FirebaseAuthService();
 
-  CheckIn? _plateData;
+  List<CheckIn>? _plateData;
 
-  CheckIn? get plateData => _plateData;
+  List<CheckIn>? get plateData => _plateData;
 
   Future<void> getPlateData() async {
     final token = await _firebaseAuthService.currentUser?.getIdToken();

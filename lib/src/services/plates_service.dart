@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:smartaccess_app/src/utils/app_constants.dart';
-import 'package:smartaccess_app/src/dtos/plates.dart';
 import 'package:smartaccess_app/src/entities/plates.dart';
 
 class PlateService {
   final apiUrl = "${AppConstants.apiBaseUrl}/plates";
 
-  Future<CheckIn?> getPlate(String token) async {
+  Future<List<CheckIn>?> getPlate(String token) async {
     final response = await http.get(
       Uri.parse(apiUrl),
       headers: <String, String>{
@@ -17,16 +16,11 @@ class PlateService {
     );
 
     if (response.statusCode == 200) {
-      final plate = CheckIn.fromJson(jsonDecode(response.body));
-      return plate;
+      List<dynamic> jsonResponse = jsonDecode(response.body);
+      List<CheckIn> plates = jsonResponse.map((json) => CheckIn.fromJson(json)).toList();
+      return plates;
     } else {
       return null;
     }
   }
 }
-
-// const PlateService {
-//   final apiUrl = "${AppConstants.apiBaseUrl}/plates";
-
-  
-// }
