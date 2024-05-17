@@ -146,6 +146,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         final coastPerMinute =
                             widget.coastPerMinuteController.text;
 
+                        await registeredUser.reload();
                         final token = await registeredUser.getIdToken();
 
                         if (token == null) {
@@ -183,7 +184,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           );
 
                           if (context.mounted) {
-                            Navigator.pushReplacementNamed(context, '/navigation');
+                            Navigator.pushReplacementNamed(
+                                context, '/navigation');
                           }
                         } else {
                           Fluttertoast.showToast(
