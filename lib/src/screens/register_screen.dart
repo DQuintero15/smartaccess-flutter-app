@@ -165,7 +165,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           'name': businessName,
                           'email': email,
                           'owner': name,
-                          'coastPerMinute': coastPerMinute,
+                          'coastPerMinute': int.parse(coastPerMinute),
                         });
 
                         final response = await widget.businessService
