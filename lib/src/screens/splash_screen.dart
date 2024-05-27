@@ -11,12 +11,19 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
-      splash: Column(
-        children: [
-          Center(
-            child: LottieBuilder.asset(AppConstants.splashAnimation),
-          )
-        ],
+      splash: LayoutBuilder(
+        builder: (context, constraints) {
+          double splashSize =
+              constraints.maxHeight * 0.6; // Adjust the size factor as needed
+          return Center(
+            child: LottieBuilder.asset(
+              AppConstants.splashAnimation,
+              height: splashSize,
+              width: splashSize,
+              fit: BoxFit.contain,
+            ),
+          );
+        },
       ),
       nextScreen: LoginScreen(),
       splashIconSize: 450,
