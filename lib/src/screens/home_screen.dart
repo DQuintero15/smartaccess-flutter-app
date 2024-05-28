@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smartaccess_app/src/providers/business_provider.dart';
+import 'package:smartaccess_app/src/providers/plates_provider.dart';
 import 'package:smartaccess_app/src/utils/app_color.dart';
 import 'package:smartaccess_app/src/utils/app_constants.dart';
 
@@ -24,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: AppColor.night,
-      body: result.businessData == null
+      body: result.nonCheckInPlates == null
           ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(20.0),
@@ -52,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  result.businessData!.name,
+                                  result.nonCheckInPlates!.name,
                                   style: const TextStyle(
                                     color: AppColor.white,
                                     fontFamily: AppConstants.fontFamily,
@@ -60,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 const SizedBox(height: 1),
                                 Text(
-                                  result.businessData!.owner,
+                                  result.nonCheckInPlates!.owner,
                                   style: const TextStyle(
                                     color: AppColor.gray,
                                     fontFamily: AppConstants.fontFamily,
@@ -68,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 const SizedBox(height: 1),
                                 Text(
-                                  'Tarifa: \$${result.businessData!.coastPerMinute.toString()} COP/min',
+                                  'Tarifa: \$${result.nonCheckInPlates!.coastPerMinute.toString()} COP/min',
                                   style: const TextStyle(
                                     color: AppColor.gray,
                                     fontFamily: AppConstants.fontFamily,
@@ -85,6 +86,63 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showDialog(context),
+        backgroundColor: AppColor.white,
+        child: const Icon(Icons.add, color: AppColor.night),
+      ),
+    );
+  }
+
+  void _showDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final _formKey = GlobalKey<FormState>();
+        String plateNumber = '';
+
+        return AlertDialog(
+          title: const Text('Registrar Placa'),
+          content: Form(
+            key: _formKey,
+            child: TextFormField(
+              decoration: const InputDecoration(labelText: 'Número de Placa'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor ingrese el número de la placa';
+                }
+                return null;
+              },
+              onSaved: (value) {
+                plateNumber = value!;
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
+
+                  await Provider.of<PlatesProvider>(context, listen: false)
+                      .createPlate(plateNumber);
+
+                  if (context.mounted) Navigator.of(context).pop();
+
+                  plateNumber = '';
+                }
+              },
+              child: const Text('Registrar'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

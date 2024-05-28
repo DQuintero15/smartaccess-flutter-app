@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:smartaccess_app/src/providers/clodinary_provider.dart';
 import 'package:smartaccess_app/src/providers/detection_provider.dart';
@@ -23,6 +24,8 @@ class _ScanScreenState extends State<ScanScreen> {
   bool isFlashOn = false;
   bool isUploadingToCloudinary = false;
   bool isProcessing = false;
+  final formatCurrency = NumberFormat.simpleCurrency(locale: 'es_CO', name: "COP");
+
 
   @override
   void initState() {
@@ -119,15 +122,32 @@ class _ScanScreenState extends State<ScanScreen> {
                   isProcessing = false;
                 });
 
-                if (detectionProvider.result != null) {
-                  Fluttertoast.showToast(
-                      msg: detectionProvider.result!,
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.green,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
+                /**
+                 * class Detection {
+                    final String plateNumber;
+                    final Double totalToPay;
+                 */
+
+                if (detectionProvider.result != null && context.mounted) {
+                  AlertDialog(
+                    title: const Text('Resultado de la Detección'),
+                    content: Column(
+                      children: [
+                        Text(
+                            'Placa: ${detectionProvider.result!.plateNumber}'),
+                        Text(
+                            'Total a Pagar: ${formatCurrency.format(detectionProvider.result!.totalToPay)}'),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Aceptar'),
+                      ),
+                    ],
+                  );
                 }
 
               } catch (e) {

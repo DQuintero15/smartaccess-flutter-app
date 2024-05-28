@@ -1,9 +1,11 @@
 import 'package:cloudinary_flutter/cloudinary_object.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smartaccess_app/src/api/firebase_api.dart';
 import 'package:smartaccess_app/src/providers/business_provider.dart';
 import 'package:smartaccess_app/src/providers/clodinary_provider.dart';
 import 'package:smartaccess_app/src/providers/detection_provider.dart';
+import 'package:smartaccess_app/src/providers/plates_provider.dart';
 import 'package:smartaccess_app/src/screens/home_screen.dart';
 import 'package:smartaccess_app/src/screens/navigation_screen.dart';
 import 'package:smartaccess_app/src/screens/login_screen.dart';
@@ -17,15 +19,18 @@ import 'package:smartaccess_app/src/utils/app_constants.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await initializeDateFormatting('es_CO', null);
   CloudinaryObject.fromCloudName(cloudName: AppConstants.cloudName);
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  FirebaseApi().init();
 
   final cameras = await availableCameras();
 
@@ -34,6 +39,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => BusinessProvider()),
         ChangeNotifierProvider(create: (context) => CloudinaryProvider()),
         ChangeNotifierProvider(create: (context) => DetectionProvider()),
+        ChangeNotifierProvider(create: (context) => PlatesProvider()),
       ],
       child: MainApp(
         cameras: cameras,
