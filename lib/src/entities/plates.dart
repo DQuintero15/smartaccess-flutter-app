@@ -70,3 +70,17 @@ class CheckIn {
     );
   }
 }
+
+class CreateLicensePlateDto {
+  final String plate;
+
+  CreateLicensePlateDto({
+    required this.plate,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'plate': plate,
+    };
+  }
+}

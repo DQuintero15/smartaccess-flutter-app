@@ -9,7 +9,7 @@ class BusinessProvider extends ChangeNotifier {
 
   Business? _businessData;
 
-  Business? get businessData => _businessData;
+  Business? get nonCheckInPlates => _businessData;
 
   Future<void> getBusinessData() async {
     final token = await _firebaseAuthService.currentUser?.getIdToken();

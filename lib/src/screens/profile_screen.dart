@@ -22,7 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final result = Provider.of<BusinessProvider>(context);
     return  Scaffold(
       backgroundColor: AppColor.night,
-      body: result.businessData == null
+      body: result.nonCheckInPlates == null
           ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(20.0),
@@ -50,7 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  result.businessData!.name,
+                                  result.nonCheckInPlates!.name,
                                   style:  const TextStyle(
                                     color: AppColor.white,
                                     fontFamily: AppConstants.fontFamily,
@@ -58,7 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                                  const SizedBox(height: 1),
                                 Text(
-                                  result.businessData!.owner,
+                                  result.nonCheckInPlates!.owner,
                                   style:  const TextStyle(
                                     color: AppColor.gray,
                                     fontFamily: AppConstants.fontFamily,
@@ -66,7 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                                  const SizedBox(height: 1),
                                 Text(
-                                  'Tarifa: \$${result.businessData!.coastPerMinute.toString()} COP/min',
+                                  'Tarifa: \$${result.nonCheckInPlates!.coastPerMinute.toString()} COP/min',
                                   style: const TextStyle(
                                     color: AppColor.gray,
                                     fontFamily: AppConstants.fontFamily,

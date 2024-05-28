@@ -7,9 +7,34 @@ class PlatesProvider extends ChangeNotifier {
   final _platesService = PlateService();
   final _firebaseAuthService = FirebaseAuthService();
 
+  bool? _plateCreated;
+
   List<CheckIn>? _plateData;
 
   List<CheckIn>? get plateData => _plateData;
+
+  List<CheckIn>? _nonCheckInPlates;
+
+  List<CheckIn>? get nonCheckInPlates => _nonCheckInPlates;
+  
+
+  bool? get plateCreated => _plateCreated;
+
+  Future<void> getNonCheckInPlates() async {
+    final token = await _firebaseAuthService.currentUser?.getIdToken();
+    if (token != null) {
+      _nonCheckInPlates = await _platesService.getNonCheckInPlates(token);
+      notifyListeners();
+    }
+  }
+
+  Future<void> createPlate(String plate) async {
+    final token = await _firebaseAuthService.currentUser?.getIdToken();
+    if (token != null) {
+      _plateCreated = await _platesService.createPlate(token, plate);
+      notifyListeners();
+    }
+  }
 
   Future<void> getPlateData() async {
     final token = await _firebaseAuthService.currentUser?.getIdToken();
