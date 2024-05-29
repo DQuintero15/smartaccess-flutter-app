@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smartaccess_app/src/providers/business_provider.dart';
+import 'package:smartaccess_app/src/providers/detection_provider.dart';
 import 'package:smartaccess_app/src/providers/plates_provider.dart';
 import 'package:smartaccess_app/src/utils/app_color.dart';
 import 'package:smartaccess_app/src/utils/app_constants.dart';
@@ -133,64 +134,88 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
 
                               return Card(
                                 color: AppColor.night,
-                                child: ListTile(
-                                  title: Text(
-                                    checkIn.licensePlate.plate,
-                                    style: const TextStyle(
-                                      color: AppColor.white,
-                                      fontFamily: AppConstants.fontFamily,
-                                    ),
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Check-in: $formattedCreatedAt',
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ListTile(
+                                      title: Text(
+                                        checkIn.licensePlate.plate,
                                         style: const TextStyle(
-                                          color: AppColor.gray,
+                                          color: AppColor.white,
                                           fontFamily: AppConstants.fontFamily,
                                         ),
                                       ),
-                                      if (formattedCheckOut != null)
-                                        Text(
-                                          'Check-out: $formattedCheckOut',
-                                          style: const TextStyle(
-                                            color: AppColor.gray,
+                                      subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Check-in: $formattedCreatedAt',
+                                            style: const TextStyle(
+                                              color: AppColor.gray,
+                                              fontFamily:
+                                                  AppConstants.fontFamily,
+                                            ),
+                                          ),
+                                          if (formattedCheckOut != null)
+                                            Text(
+                                              'Check-out: $formattedCheckOut',
+                                              style: const TextStyle(
+                                                color: AppColor.gray,
+                                                fontFamily:
+                                                    AppConstants.fontFamily,
+                                              ),
+                                            ),
+                                          Text(
+                                            'Minutos estacionado: ${checkIn.minutesParked}',
+                                            style: const TextStyle(
+                                              color: AppColor.gray,
+                                              fontFamily:
+                                                  AppConstants.fontFamily,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Monto: ${formatCurrency.format(checkIn.amount)} COP',
+                                            style: const TextStyle(
+                                              color: AppColor.gray,
+                                              fontFamily:
+                                                  AppConstants.fontFamily,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Pagado: ${checkIn.paid ? 'Sí' : 'No'}',
+                                            style: const TextStyle(
+                                              color: AppColor.gray,
+                                              fontFamily:
+                                                  AppConstants.fontFamily,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Divider(
+                                      color: AppColor.white,
+                                      thickness: 1,
+                                      height: 20,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16.0),
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          _verifyLicensePlate(
+                                              checkIn.licensePlate.plate);
+                                        },
+                                        child: const Text(
+                                          'Verificar Placa',
+                                          style: TextStyle(
+                                            color: AppColor.night,
                                             fontFamily: AppConstants.fontFamily,
                                           ),
                                         ),
-                                      Text(
-                                        'Minutos estacionado: ${checkIn.minutesParked}',
-                                        style: const TextStyle(
-                                          color: AppColor.gray,
-                                          fontFamily: AppConstants.fontFamily,
-                                        ),
                                       ),
-                                      Text(
-                                        'Monto: ${formatCurrency.format(checkIn.amount)} COP',
-                                        style: const TextStyle(
-                                          color: AppColor.gray,
-                                          fontFamily: AppConstants.fontFamily,
-                                        ),
-                                      ),
-                                      Text(
-                                        'Pagado: ${checkIn.paid ? 'Sí' : 'No'}',
-                                        style: const TextStyle(
-                                          color: AppColor.gray,
-                                          fontFamily: AppConstants.fontFamily,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: double.infinity,
-                                        child: Divider(
-                                          color: AppColor.white,
-                                          thickness: 1,
-                                          height: 20,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               );
                             },
@@ -206,6 +231,14 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
         child: const Icon(Icons.add, color: AppColor.night),
       ),
     );
+  }
+
+  void _verifyLicensePlate(String plate) async {
+    await Provider.of<DetectionProvider>(context, listen: false)
+        .verifyDetection(plate);
+
+    await Provider.of<PlatesProvider>(context, listen: false)
+        .getNonCheckInPlates();
   }
 
   void _showDialog(BuildContext context) {
@@ -243,7 +276,10 @@ class _VehiclesScreenState extends State<VehiclesScreen> {
 
                   if (context.mounted) Navigator.of(context).pop();
 
-                plateNumber = '';
+                  plateNumber = '';
+
+                  await Provider.of<PlatesProvider>(context, listen: false)
+                      .getNonCheckInPlates();
                 }
               },
               child: const Text('Registrar'),
